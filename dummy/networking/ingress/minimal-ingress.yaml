@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  # Bằng việc chỉ định IngressClass sẽ có name và spec sẽ khai báo sử dụng controller nào
+  name: nginx-ingress-controller
+spec:
+  controller: example.com/ingress-controller
+  parameters:
+    apiGroup: k8s.example.com
+    kind: IngressParameters
+    name: external-lb
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+  annotations: # Annotations cho phép bạn lưu trữ các dữ liệu không xác định trước
+    # Tùy từng ingress controller khác nhau mà phần này config sẽ khác nhau
+    # Trong trường hợp này, là rewrite lại mọi path sang path / ở application
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx-ingress-controller # khai báo ingressController sẽ sử dụng tham chiếu bởi ingressClassName
+  rules: # Đây là nơi khai báo các quy tắc định tuyến.
+    - host: "foo.bar.com"
+      http: # Đây là ví dụ minh họa cho việc sử dụng fanout(phân phối)
+        # 1 host nhưng khác path sẽ vào nhưng service khác nhau
+        paths:
+          - pathType: Prefix
+            path: "/bar"
+            backend:
+              service:
+                name: service1
+                port:
+                  number: 80
+          - path: "/foo"
+            pathType: Prefix
+            backend:
+              service:
+                name: service2
+                port:
+                  number: 8080
+    - host: "*.foo.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/foo"
+            backend:
+              service:
+                name: service2
+                port:
+                  number: 80
