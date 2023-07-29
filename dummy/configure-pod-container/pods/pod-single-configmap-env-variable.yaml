@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dapi-test-pod
+spec:
+  containers:
+    - name: test-container
+      image: registry.k8s.io/busybox
+      command: ["/bin/sh", "-c", "env"]
+      resources:
+        limits:
+          memory: 512Mi
+          cpu: "1"
+        requests:
+          memory: 256Mi
+          cpu: "0.5"
+      env:
+        - name: SECRET_PASSPHRASE # Đặt tên biến môi trường
+          valueFrom:
+            configMapKeyRef:
+              name: game-config # Tên của ConfigMap
+              key: game.properties
+  restartPolicy: Never

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment # Chỉ định loại tài nguyên, ở đây là "Deployment"
+metadata: # Chứa thông tin về tài nguyên
+  name: nginx-deployment
+  labels: # Các nhãn được gắn với tài nguyên này, cho phép bạn định danh và phân nhóm các tài nguyên.
+    app: nginx
+spec:
+  replicas: 3
+  selector: #  Xác định cách chọn Pod mà Deployment quản lý
+    matchLabels: # Các nhãn được sử dụng để xác định các Pod thuộc về Deployment.
+      # Trong trường này, nó sử dụng nhãn "app: nginx" để lựa chọn các Pod có nhãn này
+      # Tức là sẽ dựa vào label này của Pod để biết đang có bao nhiêu instance từ đó điều chỉnh như mong muốn (desire state)
+      app: nginx
+  template: # Định nghĩa template cho các Pod sẽ được triển khai
+    metadata: # Chứa thông tin về template Pod
+      labels: # Các nhãn được gắn với template Pod, trong trường này có nhãn "app: nginx".
+        app: nginx
+    spec: # Xác định cấu hình cho template Pod, bao gồm các container bên trong nó
+      containers:
+        - name: nginx
+          image: nginx:1.16.1
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.5"
