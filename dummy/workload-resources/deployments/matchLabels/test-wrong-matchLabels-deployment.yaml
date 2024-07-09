@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment # Chỉ định loại tài nguyên, ở đây là "Deployment"
+metadata: # Chứa thông tin về tài nguyên
+  name: echo-server-deployment # Tên của Deployment
+  labels: # Các nhãn được gắn với tài nguyên này, cho phép bạn định danh và phân nhóm các tài nguyên
+    app: echo-server
+spec: # Định nghĩa chi tiết cho Deployment
+  replicas: 2 # Số lượng bản sao của Pod sẽ được chạy
+  selector: # Định nghĩa nhãn để chọn các Pod thuộc về Deployment này
+    matchLabels:
+      app: echo-server1
+  template: # Định nghĩa template cho các Pod sẽ được tạo bởi Deployment này
+    metadata:
+      labels:
+        app: echo-server
+    spec: # Xác định cấu hình cho template Pod, bao gồm các container bên trong nó
+      containers:
+        - name: echo-server # Tên của container
+          image: kicbase/echo-server:1.0 # Image của container
+          resources: # Định nghĩa yêu cầu tài nguyên cho container
+            limits: # Giới hạn tối đa tài nguyên container có thể sử dụng
+              memory: 512Mi
+              cpu: "1"
+            requests: # Yêu cầu tối thiểu tài nguyên container cần có
+              memory: 256Mi
+              cpu: "0.5"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: echo-server-service
+spec:
+  selector:
+    app: echo-server
+  ports:
+    # By default, and for convenience, the `targetPort` is set to the same value as the `port` field.
+    - port: 8080

@@ -1,0 +1,1 @@
+https://www.notion.so/vjcspy/Deployments-Workload-resources-59f06f0030d54988938e9f5d1d4c089b?pvs=4
