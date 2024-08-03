@@ -1,0 +1,50 @@
+### DON'T APPLY THIS
+### Lưu ý đây là mình lấy từ nginx ingress ra để xem, 
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: nginx-ingress-131
+    meta.helm.sh/release-namespace: default
+  creationTimestamp: "2024-08-03T15:12:57Z"
+  labels:
+    app.kubernetes.io/instance: nginx-ingress-131
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: nginx-ingress
+    app.kubernetes.io/version: 3.6.1
+    helm.sh/chart: nginx-ingress-1.3.1
+  name: nginx-ingress-131-controller
+  namespace: default
+  resourceVersion: "3591"
+  uid: 7aa10719-44f6-4f4e-8697-87c117c09a2e
+spec:
+  allocateLoadBalancerNodePorts: true
+  clusterIP: 10.101.130.21
+  clusterIPs:
+  - 10.101.130.21
+  externalTrafficPolicy: Local
+  healthCheckNodePort: 31741
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    nodePort: 30320
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  - name: https
+    nodePort: 30225
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app.kubernetes.io/instance: nginx-ingress-131
+    app.kubernetes.io/name: nginx-ingress
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+    - hostname: localhost
