@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment # Chỉ định loại tài nguyên, ở đây là "Deployment"
+metadata: # Chứa thông tin về tài nguyên
+  name: echo-server-wrong-label
+  labels: # Các nhãn được gắn với tài nguyên này, cho phép bạn định danh và phân nhóm các tài nguyên.
+    app: echo-server-wrong-label
+spec:
+  replicas: 2
+  selector: 
+    matchLabels:
+      # Label này phải match với label của Pod template, không phải là label của deployment.
+      # Do nó có ý nghĩa là sẽ replicate cho POD
+      # NGoài ra nó là immutable -> không change được
+      app: echo-server1
+  template:
+    metadata: 
+      labels: 
+        app: echo-server1
+    spec: # Xác định cấu hình cho template Pod, bao gồm các container bên trong nó
+      containers:
+        - name: echo-server1
+          image: kicbase/echo-server:1.0
+          ports:
+            - containerPort: 8080
+          env: # Define environment variables
+            - name: PORT
+              value: "8080" # Port value used by the application
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.5"
+        - name: echo-server2
+          image: kicbase/echo-server:1.0
+          ports:
+            - containerPort: 8081
+          env: # Define environment variables
+            - name: PORT
+              value: "8081" # Port value used by the application
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.5"
